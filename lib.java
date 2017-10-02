@@ -1,6 +1,3 @@
-package player19;
-
-import player19.vector;
 
 public class lib {
 	
