@@ -1,6 +1,3 @@
-package player19;
-
-import java.util.Random;
 
 public class vector implements Comparable<vector>{
 
