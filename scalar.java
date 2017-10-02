@@ -1,5 +1,3 @@
-package player19;
-
 import java.util.Random;
 
 public class scalar {
@@ -16,7 +14,7 @@ public class scalar {
 	scalar() {
 		double random = Math.random();
 		this.x = random;
-		this.sigma = 1;
+		this.sigma = 0.1;
 		
 	}
 	
