@@ -1,5 +1,3 @@
-package player19;
-
 import org.vu.contest.ContestSubmission;
 import org.vu.contest.ContestEvaluation;
 
@@ -9,27 +7,19 @@ import java.util.List;
 import java.util.Random;
 import java.util.Properties;
 
-import player19.vector;
-import player19.scalar;
-import player19.lib;
+
 
 public class player19 implements ContestSubmission
 {
 	Random rnd_;
 	ContestEvaluation evaluation_;
-    private int evaluations_limit_;
+    	private int evaluations_limit_;
 	
 	public player19()
 	{
 		rnd_ = new Random();
 	}
 	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		System.out.println("Super TEAM");
-	}
-	
-		
 	public void setSeed(long seed)
 	{
 		// Set seed of algortihms random process
@@ -77,7 +67,6 @@ public class player19 implements ContestSubmission
 
 		ArrayList<vector> children = new ArrayList<vector>();  
 		ArrayList<vector> parents = new ArrayList<vector>();
-		ArrayList<vector> newPop  = new ArrayList<vector>();
 		
         // calculate fitness
         while(evals<evaluations_limit_){
@@ -89,14 +78,14 @@ public class player19 implements ContestSubmission
     		pop.clear();
     		
             // Apply crossover / mutation operators (worse results mutation are accepted)
-    		for (int i = 0; i < 50; i++) {
+    		for (int i = 25; i < 50; i++) {
     			parents.get(i).mutate();
     		}
     		for (int i = 0; i < 50; i++) {
     			// select second parent random
     			vector parent1 = parents.get(i);
     			vector parent2 = parents.get(rnd_.nextInt(50));
-    			vector[] twins = lib.recombine(parent1, parent2, 5);
+    			vector[] twins = lib.recombine(parent1, parent2, rnd_.nextInt(8));
     			children.add(twins[0]);
     			children.add(twins[1]);
     		}
@@ -104,19 +93,21 @@ public class player19 implements ContestSubmission
     		// Add mutated parents and children together, so no selection applied.
     		pop.addAll(parents);
     		pop.addAll(children);
-            parents.clear();
-            children.clear();
+            	parents.clear();
+            	children.clear();
     		
     		// get the fitness for the new children and the mutated parents
     		for (int i=0; i<150; i++ ){
     			pop.get(i).fitness = (double) evaluation_.evaluate(pop.get(i).solution);
+			//System.out.println(pop.get(i).fitness);
+			//System.out.println(pop.get(i).solution);
     			evals ++;
     		}
     		Collections.sort(pop);
     		
     		// Select survivors (remove the last best)
     		for (int i=100; i<150; i++ ){
-    			pop.remove(i);
+    			pop.remove(100);
     		}
         }
 	}
