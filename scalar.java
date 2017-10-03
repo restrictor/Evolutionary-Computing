@@ -12,7 +12,7 @@ public class scalar {
 	double sigma;
 	
 	scalar() {
-		double random = Math.random();
+		double random = (double) -5 + Math.random()*10;
 		this.x = random;
 		this.sigma = 0.1;
 		
@@ -29,7 +29,7 @@ public class scalar {
 	
 	void addGaussian() {
 		Random r = new Random();
-		this.x = r.nextGaussian()*this.sigma + this.x;
+		this.x = r.nextGaussian()*2*this.sigma + this.x;
 	}
 	
 	void updateSigma(double oldFitness, double newFitness) {
