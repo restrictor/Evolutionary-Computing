@@ -33,13 +33,13 @@ public class player19 implements ContestSubmission
 		
 		// Get evaluation properties
 		Properties props = evaluation.getProperties();
-        // Get evaluation limit
-        evaluations_limit_ = Integer.parseInt(props.getProperty("Evaluations"));
+        	// Get evaluation limit
+        	evaluations_limit_ = Integer.parseInt(props.getProperty("Evaluations"));
 		// Property keys depend on specific evaluation
 		// E.g. double param = Double.parseDouble(props.getProperty("property_name"));
-        boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
-        boolean hasStructure = Boolean.parseBoolean(props.getProperty("Regular"));
-        boolean isSeparable = Boolean.parseBoolean(props.getProperty("Separable"));
+		boolean isMultimodal = Boolean.parseBoolean(props.getProperty("Multimodal"));
+		boolean hasStructure = Boolean.parseBoolean(props.getProperty("Regular"));
+		boolean isSeparable = Boolean.parseBoolean(props.getProperty("Separable"));
 
 		// Do sth with property values, e.g. specify relevant settings of your algorithm
         if(isMultimodal){
@@ -69,45 +69,78 @@ public class player19 implements ContestSubmission
 		ArrayList<vector> parents = new ArrayList<vector>();
 		
         // calculate fitness
+		int mutations = 0;
+		int iter = 0;
+		
         while(evals<evaluations_limit_){
+		iter = iter + 1;
 
-        	// Select parents (very basic selection: take best half)
+		// Select parents (very basic selection: take best half)
     		for (int i = 0; i<50; i++) {
     			parents.add(pop.get(i));
     		}
     		pop.clear();
     		
-            // Apply crossover / mutation operators (worse results mutation are accepted)
+            // Apply crossover / mutation operators 
     		for (int i = 25; i < 50; i++) {
-    			parents.get(i).mutate();
+    			double[] mutation = parents.get(i).mutate();
+    			double fitness = (double) evaluation_.evaluate(mutation);
+    			evals++;
+				if (fitness > parents.get(i).fitness) {
+					for (int j = 0; j < 10; j++) {
+						parents.get(i).scalarArray[j].x = mutation[j];
+						parents.get(i).solution[j]= mutation[j];			
+					}
+					parents.get(i).fitness = fitness;
+					mutations = mutations + 1;
+				}
     		}
     		for (int i = 0; i < 50; i++) {
     			// select second parent random
+			System.out.print(i);
     			vector parent1 = parents.get(i);
     			vector parent2 = parents.get(rnd_.nextInt(50));
-    			vector[] twins = lib.recombine(parent1, parent2, rnd_.nextInt(8));
-    			children.add(twins[0]);
-    			children.add(twins[1]);
+    			vector child1 =  lib.recombine(parent1, parent2, rnd_.nextInt(8));
+    			vector child2 = lib.recombine(parent2, parent1, rnd_.nextInt(8));
+    			// 
+    			
+    			// HIER ONDER ZOUDEN WE WILLEN EVALUEREN MAAR DAT WERKT NOG NIET!
+    			// Ik denk dat ik elke keer een reference maak naar zelfde opject?? 
+    			
+    			//
+    			//child1.fitness = (double) evaluation_.evaluate(child1.solution);
+    			//evals++;
+    			//child2.fitness = (double) evaluation_.evaluate(child2.solution);
+				//child1.adjustFitness((double) evaluation_.evaluate(child1.solution));
+    			//evals++;
+    			children.add(child1);
+    			children.add(child2);
+			
     		}
     		
     		// Add mutated parents and children together, so no selection applied.
-    		pop.addAll(parents);
+			pop.clear();    		
+			pop.addAll(parents);
     		pop.addAll(children);
-            	parents.clear();
-            	children.clear();
-    		
-    		// get the fitness for the new children and the mutated parents
-    		for (int i=0; i<150; i++ ){
-    			pop.get(i).fitness = (double) evaluation_.evaluate(pop.get(i).solution);
-			//System.out.println(pop.get(i).fitness);
-			//System.out.println(pop.get(i).solution);
-    			evals ++;
-    		}
-    		Collections.sort(pop);
+            parents.clear();
+            children.clear();
+            Collections.sort(pop);
     		
     		// Select survivors (remove the last best)
     		for (int i=100; i<150; i++ ){
     			pop.remove(100);
+    		}
+    		if (iter % 5 == 0) {
+    			for (int i = 0; i<100; i++) {
+    				for (int j = 0; j<10; j++) {
+						if ((mutations/ 250) > 1/5 ) {
+							pop.get(i).scalarArray[j].sigma = pop.get(i).scalarArray[j].sigma * 1.05;
+						} else {
+							pop.get(i).scalarArray[j].sigma = pop.get(i).scalarArray[j].sigma * 0.95;
+						}
+						mutations = 0;
+    				}
+    			}
     		}
         }
 	}
