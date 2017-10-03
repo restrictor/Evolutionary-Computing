@@ -7,22 +7,20 @@ public class lib {
 	 * 
 	 */
 
-	static vector[] recombine(vector parent1, vector parent2, int position) {
-		scalar[] scalarArray1 = new scalar[10];
-		scalar[] scalarArray2 = new scalar[10];
+	static vector recombine(vector parent1, vector parent2, int position) {
+		scalar[] s = new scalar[10];
 		for (int i = 0; i <10; i++){
+			s[i] = new scalar();
 			if (i<position) {
-				scalarArray1[i] = parent1.scalarArray[i];
-				scalarArray2[i] = parent2.scalarArray[i];
-				
+				s[i].x = parent1.scalarArray[i].x;
+				s[i].sigma = parent1.scalarArray[i].sigma;
 			} else {
-				scalarArray1[i] = parent2.scalarArray[i];
-				scalarArray2[i] = parent1.scalarArray[i];
+				s[i].x = parent2.scalarArray[i].x;
+				s[i].sigma = parent2.scalarArray[i].sigma;
 			}
 		}
-		vector[] twins = new vector[2];
-		twins[0] = new vector(scalarArray1,0.0);
-		twins[1] = new vector(scalarArray2,0.0);
-		return twins;
+		vector a = new vector(s);
+		return a;
 	}
 }
+
