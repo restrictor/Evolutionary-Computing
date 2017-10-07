@@ -1,4 +1,5 @@
 
+
 import org.vu.contest.ContestSubmission;
 import org.vu.contest.ContestEvaluation;
 
@@ -47,26 +48,43 @@ public class player19 implements ContestSubmission
 
 		// Do sth with property values, e.g. specify relevant settings of your algorithm
         if(isMultimodal){
-            System.out.println("multi");
 		multi = true;
         }else{
-            System.out.println("no_multi");
 		multi = false;
         }
 	if(hasStructure){
 		hasStruc = true;
-            System.out.println("hasStructure");
         }else{
-            System.out.println("hasNoStructure");
 		hasStruc = false;
         }
 	if(isSeparable){
 		isSep = true;
-            System.out.println("isSeparable");
         }else{
-            System.out.println("isNotSeparable");
 		isSep = false;
         }
+//katsuura
+//multi
+//hasNoStructure
+//isNotSeparable
+
+//BentCigar
+//no_multi
+//hasNoStructure
+//isNotSeparable
+
+//Schaffers
+//multi
+//hasStructure
+//isNotSeparable
+
+		/** - representation = (array of length 10)
+		  *   - fitness function = (comes with the assignment)
+		  *   - population = (N random chosen solutions)
+		  *   - parent selection method = (tournament, ...)
+		  *   - variation operators, recombination and mutation = (crossover, ...)
+		  *   - survivor selection mechanism = (replacement, ...)
+		  */
+
     }
     
 	public void run()
@@ -75,6 +93,7 @@ public class player19 implements ContestSubmission
         	settings setup = new settings();
 		int evals = 0;
         	int POPULATION = setup.population; // needs to be even number and 4 as comon divider
+		double learingRate = setup.learningRate;
         // Initialize population
 		ArrayList<vector> pop = new ArrayList<vector>();
 		for (int i=0; i<POPULATION; i++ ){
@@ -151,12 +170,12 @@ public class player19 implements ContestSubmission
     		// Select survivors (remove the last best)
     		pop.subList(POPULATION, pop.size()).clear();
     		if ((iter % 5 == 0)) { // && (multi)) {
-    			for (int i = 0; i<POPULATION; i++) {
+    			for (int i = 0; i<pop.size(); i++) {
     				for (int j = 0; j<10; j++) {
 						if (mutations/(mutations + no_mutations) > 1/5) {
-							pop.get(i).scalarArray[j].sigma = pop.get(i).scalarArray[j].sigma * 1.05;
+							pop.get(i).scalarArray[j].sigma = pop.get(i).scalarArray[j].sigma * learingRate;
 						} else {
-							pop.get(i).scalarArray[j].sigma = pop.get(i).scalarArray[j].sigma * 0.95;
+							pop.get(i).scalarArray[j].sigma = pop.get(i).scalarArray[j].sigma / learingRate;
 						}
 						
     				}
@@ -172,73 +191,3 @@ public class player19 implements ContestSubmission
 // help function
 //remove duplicates arrayList1.removeAll(arrayList2);
 
-	  // Components of Evolutionary Algorithm
-	  
-		  /** - representation = (array of length 10)
-		  *   - fitness function = (comes with the assignment)
-		  *   - population = (N random chosen solutions)
-		  *   - parent selection method = (tournament, ...)
-		  *   - variation operators, recombination and mutation = (crossover, ...)
-		  *   - survivor selection mechanism = (replacement, ...)
-		  */
-	  
-	  // ASSIGMENT WITH THREE (OR FOUR) DIFFERENT KIND OF PROBLEMS
-  		
-		/** - 1 unimodal (no need for diversity)
-		 * 		SETUP
-		 * 		- more selective pressure? (less mutation more selection)
-		 * 		- ...
-		 * 		- ..
-		 *  - 2 multimodal (diversity is needed)
-		 *  	SETUP
-		 *  	- higher mutation paramters (less crossover more selection)
-		 *  	- ...
-		 *  - 3 ..
-		 *  - 4
-		 */
-	  
-		// INITIATE POPULATION
-		  
-			  /** - make random solutions (say 100)
-			   * - efficient to use problem-specific heuristics to obtain fitter start population?
-			   */
-		
-		// DO WHILE/UNTILL
-  
-			  /** - elapse times
-			   * - maximum number of fitness evaluations
-			   * - no further improvement in fitness can be seen
-			   * * - diversity threshold population has been reached
-			   */ 
-		  
-			// DO A PARENT SELECTION  
-			  
-				  /** - get fitness if needed for all parents (tournament doesn't need)
-				   * - create set parents by these fitnesses (stochastic)
-				   * - 
-				   */
-			  
-			// DO OFFSPRING
-			  
-				  /**  - use crossover 
-				   * 
-				   */
-		  
-		  	// DO MUTATION
-		  
-			  	  /** - whole population or part
-			  	   *  - depends on last fitness improvement? (less mutation in ending)
-			  	   *  - Gaussian pertubation
-			  	   */
-		  
-		  	// DO SELECTION
-		  
-			  	  /** - get the fitness if necessary from all (not with tournaments)
-			  	   *  - select from parents or only from children? (deterministic)
-			  	   *  - lambda = 7 mu? (ration of offspring selection)
-			  	   *  - ranking? (absolute, relative, ...)
-			  	   *  - elitism, remove the worst, ...
-			  	   *  - with replace?
-			  	   *  - ...
-			  	   */
-		  
