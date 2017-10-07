@@ -1,3 +1,4 @@
+
 import org.vu.contest.ContestSubmission;
 import org.vu.contest.ContestEvaluation;
 
@@ -14,6 +15,9 @@ public class player19 implements ContestSubmission
 	Random rnd_;
 	ContestEvaluation evaluation_;
     	private int evaluations_limit_;
+	boolean multi;
+	boolean hasStruc;
+	boolean isSep;
 	
 	public player19()
 	{
@@ -43,21 +47,37 @@ public class player19 implements ContestSubmission
 
 		// Do sth with property values, e.g. specify relevant settings of your algorithm
         if(isMultimodal){
-            // Do sth
+            System.out.println("multi");
+		multi = true;
         }else{
-            // Do sth else
+            System.out.println("no_multi");
+		multi = false;
+        }
+	if(hasStructure){
+		hasStruc = true;
+            System.out.println("hasStructure");
+        }else{
+            System.out.println("hasNoStructure");
+		hasStruc = false;
+        }
+	if(isSeparable){
+		isSep = true;
+            System.out.println("isSeparable");
+        }else{
+            System.out.println("isNotSeparable");
+		isSep = false;
         }
     }
     
 	public void run()
 	{
 		// Run your algorithm here
-        
+        	settings setup = new settings();
 		int evals = 0;
-        
+        	int POPULATION = setup.population; // needs to be even number and 4 as comon divider
         // Initialize population
 		ArrayList<vector> pop = new ArrayList<vector>();
-		for (int i=0; i<100; i++ ){
+		for (int i=0; i<POPULATION; i++ ){
 			vector member = new vector();
 			member.fitness = (double) evaluation_.evaluate(member.solution);
 			evals ++;
@@ -70,19 +90,20 @@ public class player19 implements ContestSubmission
 		
         // calculate fitness
 		int mutations = 0;
+		int no_mutations = 0;
 		int iter = 0;
 		
         while(evals<evaluations_limit_){
 		iter = iter + 1;
 
 		// Select parents (very basic selection: take best half)
-    		for (int i = 0; i<50; i++) {
+    		for (int i = 0; i<POPULATION/2; i++) {
     			parents.add(pop.get(i));
     		}
     		pop.clear();
     		
             // Apply crossover / mutation operators 
-    		for (int i = 25; i < 50; i++) {
+    		for (int i = POPULATION/4; i < POPULATION/2; i++) {
     			double[] mutation = parents.get(i).mutate();
     			double fitness = (double) evaluation_.evaluate(mutation);
     			evals++;
@@ -93,32 +114,33 @@ public class player19 implements ContestSubmission
 					}
 					parents.get(i).fitness = fitness;
 					mutations = mutations + 1;
+				} else {
+					no_mutations = no_mutations +1;
 				}
     		}
-    		for (int i = 0; i < 50; i++) {
-    			// select second parent random
-			System.out.print(i);
+    		for (int i = 0; i < POPULATION/2; i++) {
     			vector parent1 = parents.get(i);
-    			vector parent2 = parents.get(rnd_.nextInt(50));
-    			vector child1 =  lib.recombine(parent1, parent2, rnd_.nextInt(8));
-    			vector child2 = lib.recombine(parent2, parent1, rnd_.nextInt(8));
-    			// 
-    			
-    			// HIER ONDER ZOUDEN WE WILLEN EVALUEREN MAAR DAT WERKT NOG NIET!
-    			// Ik denk dat ik elke keer een reference maak naar zelfde opject?? 
-    			
-    			//
-    			//child1.fitness = (double) evaluation_.evaluate(child1.solution);
-    			//evals++;
-    			//child2.fitness = (double) evaluation_.evaluate(child2.solution);
-				//child1.adjustFitness((double) evaluation_.evaluate(child1.solution));
-    			//evals++;
-    			children.add(child1);
-    			children.add(child2);
-			
+    			vector parent2 = parents.get(rnd_.nextInt(POPULATION/2));
+			if (multi) {
+				vector[] twins = lib.uniformCrossover(parent1, parent2);
+	    			vector child1 =  twins[0];
+				vector child2 =  twins[1];
+				child1.fitness = (double) evaluation_.evaluate(child1.solution);
+				evals++;
+				child2.fitness = (double) evaluation_.evaluate(child2.solution);
+				evals++;
+				evals++;  
+				children.add(child1);
+	    			children.add(child2);
+			} else {
+				// this works very good for no_multi
+				vector child1 = lib.recombine(parent1, parent2, rnd_.nextInt(8));
+				vector child2 = lib.recombine(parent2, parent1, rnd_.nextInt(8));
+				children.add(child1);
+	    			children.add(child2);
+			}
     		}
     		
-    		// Add mutated parents and children together, so no selection applied.
 			pop.clear();    		
 			pop.addAll(parents);
     		pop.addAll(children);
@@ -127,20 +149,20 @@ public class player19 implements ContestSubmission
             Collections.sort(pop);
     		
     		// Select survivors (remove the last best)
-    		for (int i=100; i<150; i++ ){
-    			pop.remove(100);
-    		}
-    		if (iter % 5 == 0) {
-    			for (int i = 0; i<100; i++) {
+    		pop.subList(POPULATION, pop.size()).clear();
+    		if ((iter % 5 == 0)) { // && (multi)) {
+    			for (int i = 0; i<POPULATION; i++) {
     				for (int j = 0; j<10; j++) {
-						if ((mutations/ 250) > 1/5 ) {
+						if (mutations/(mutations + no_mutations) > 1/5) {
 							pop.get(i).scalarArray[j].sigma = pop.get(i).scalarArray[j].sigma * 1.05;
 						} else {
 							pop.get(i).scalarArray[j].sigma = pop.get(i).scalarArray[j].sigma * 0.95;
 						}
-						mutations = 0;
+						
     				}
     			}
+    			mutations = 0;
+			no_mutations = 0;
     		}
         }
 	}
