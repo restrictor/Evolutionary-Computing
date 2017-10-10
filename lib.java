@@ -55,5 +55,15 @@ public class lib {
 		return copy; 
 	}
 
+	static double distance(double[] s1, double[] s2) {
+		double dist = 0;
+		for (int i = 0; i <10; i++){
+			//System.out.println(s1[i]);
+			//System.out.println(s2[i]);
+			dist = dist + ((s1[i]-s2[i]) * (s1[i] - s2[i]));
+		}
+		return Math.sqrt(dist);
+	}
+	
 }
 
