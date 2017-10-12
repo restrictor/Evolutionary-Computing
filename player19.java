@@ -1,4 +1,5 @@
 
+
 import org.vu.contest.ContestSubmission;
 import org.vu.contest.ContestEvaluation;
 
@@ -132,23 +133,7 @@ public class player19 implements ContestSubmission
         		}	
         		pop.clear();
 	
-				// mutatie
-//				for (int i = POPULATION/4; i < POPULATION/2; i++) {
-//		    			double[] mutation = parents.get(i).mutate();
-//		    			double fitness = (double) evaluation_.evaluate(mutation);
-//		    			//evals++;
-//						if (fitness > parents.get(i).fitness) {
-//							for (int j = 0; j < 10; j++) {
-//								parents.get(i).scalarArray[j].x = mutation[j];
-//								parents.get(i).solution[j]= mutation[j];			
-//							}
-//							parents.get(i).fitness = fitness;
-//							mutations = mutations + 1;
-//						} else {
-//							no_mutations = no_mutations +1;
-//						}
-//		    	}
-				
+				// recombination
 				for (int i = 0; i < 100; i++) {
 	    			vector parent1 = parents.get(rnd_.nextInt(POPULATION/2));
 	    			vector parent2 = parents.get(rnd_.nextInt(POPULATION/2));
@@ -223,48 +208,16 @@ public class player19 implements ContestSubmission
 		if (fun == "kat") {
 			
 			learingRate = 1.01;
-			// WE LOSE DIVERSITY UNNECESSERY
-			 //Stochastic universal sampling (more diversity)
-//			for (int i = 0; i<5; i++) {
-//				for (int j = 0; j< ((int) (90-(20*(i)))/5); j++) {
-//					int min = i*20;
-//					int max = ((i+1)*20)-1; 
-//					parents.add(pop.get(rnd_.nextInt(max - min + 1) + min));
-//				}
-//    		}
-//			pop.clear();
 
-//			for (int i = 0; i<POPULATION/2; i++) {
-//    			parents.add(pop.get(rnd_.nextInt(POPULATION)));
-//    		}	
-//    		pop.clear();
 			
     		for (int i = 0; i<POPULATION/2; i++) {
     			int ind = rnd_.nextInt(pop.size()-1);
     			parents.add(pop.get(ind));
     			pop.remove(ind);
     		}	
-	    	pop.clear();
+		
 			
-			
-			// mutatie
-//			for (int i = 0; i < POPULATION/2; i++) {
-//	    			double[] mutation = parents.get(i).mutate();
-//	    			double fitness = (double) evaluation_.evaluate(mutation);
-//	    			//evals++;
-//					if (fitness > parents.get(i).fitness) {
-//						for (int j = 0; j < 10; j++) {
-//							parents.get(i).scalarArray[j].x = mutation[j];
-//							parents.get(i).solution[j]= mutation[j];			
-//						}
-//						parents.get(i).fitness = fitness;
-//						mutations = mutations + 1;
-//					} else {
-//						no_mutations = no_mutations +1;
-//					}
-//	    		}
-			
-			
+	
 			// offspring intermediate recombination
 			for (int i = 0; i < 200; i++) {
 				if (rnd_.nextDouble()<0.3) {
@@ -298,22 +251,7 @@ public class player19 implements ContestSubmission
 					children.add(child);
 				}
 			}
-			// uniform crossover
-//			for (int i = 0; i < 50; i++) {
-//	    		vector parent1 = parents.get(i);;
-//	    		vector parent2 = parents.get(rnd_.nextInt(POPULATION/2));
-//				vector[] twins = lib.uniformCrossover(parent1, parent2);
-//	    		vector child1 =  twins[0];
-//				vector child2 =  twins[1];
-//				child1.fitness = (double) evaluation_.evaluate(child1.solution);
-//				//evals++;
-//				child2.fitness = (double) evaluation_.evaluate(child2.solution);
-//				evals++;
-//				evals++;
-//				evals++;
-//				children.add(child1);
-//	    		children.add(child2);
-//			}	
+
 			
 //			// mutatie
 			for (int i = 0; i < children.size(); i++) {
@@ -339,11 +277,9 @@ public class player19 implements ContestSubmission
     		pop.addAll(parents);
             parents.clear();
             children.clear();
-            //Collections.sort(pop);
 
 			// survival selection
-			//pop.subList(POPULATION, pop.size()).clear();
-//	    	
+
 			for (int i = 0; i < 100; i++) {
 				for (int j=0; j < 15; j++) {
 	    				robin.add(pop.get(rnd_.nextInt(pop.size()-1)));
@@ -401,35 +337,13 @@ public class player19 implements ContestSubmission
 			//multi
 			//hasStructure
 			//isNotSeparable
-
-			// Select parents (elite)
-//	    		for (int i = 0; i<POPULATION/2; i++) {
-//	    			parents.add(pop.get(i));
-//	    		}
-//	    		pop.clear();
+		// parents selection
     		for (int i = 0; i<POPULATION/2; i++) {
     			int ind = rnd_.nextInt(pop.size()-1);
     			parents.add(pop.get(ind));
     			pop.remove(ind);
     		}
 	    		
-	    		
-			// mutation
-//			for (int i = POPULATION/4; i < POPULATION/2; i++) {
-//    			double[] mutation = parents.get(i).mutate();
-//    			double fitness = (double) evaluation_.evaluate(mutation);
-//    			//evals++;
-//				if (fitness > parents.get(i).fitness) {
-//					for (int j = 0; j < 10; j++) {
-//						parents.get(i).scalarArray[j].x = mutation[j];
-//						parents.get(i).solution[j]= mutation[j];			
-//					}
-//					parents.get(i).fitness = (double) fitness;
-//					mutations = mutations + 1;
-//				} else {
-//					no_mutations = no_mutations +1;
-//				}
-//    			}
 
 			// uniform crossover
 			for (int i = 0; i < 50; i++) {
