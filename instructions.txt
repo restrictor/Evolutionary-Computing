@@ -1,0 +1,9 @@
+To run the algorithm make sure to
+ put the files in the same folder
+and to run the bash file EA,
+because it sets the setup file.
+
+Warning the file prints a new
+file which easily ecceeds 25
+mb of space. If not wanted comment
+the statistic parts in player19.
