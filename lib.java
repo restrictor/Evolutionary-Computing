@@ -1,4 +1,3 @@
-
 import java.util.Random;
 
 public class lib {
@@ -63,6 +62,25 @@ public class lib {
 			dist = dist + ((s1[i]-s2[i]) * (s1[i] - s2[i]));
 		}
 		return Math.sqrt(dist);
+	}
+
+	public static int FindTotalUniqueNumbers(double[] list)
+	{
+	    if(list.length < 0)
+		return 0;
+
+	    double currentNumber = list[0];
+	    int currentCount = 1;
+	    for(int i = 1; i < list.length; i++)
+	    {
+		if(list[i] != currentNumber)
+		{
+		    currentCount++;
+		    currentNumber = list[i];
+		}
+	    }
+
+	    return currentCount;
 	}
 	
 }
